@@ -3,6 +3,7 @@ package com.jeremy.RSAProj;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -136,7 +137,7 @@ class RsaProjApplicationTests {
 	}
 	
 	@Test
-	void testEncryptionDecryptionProcess() {
+	void testEncryptionDecryptionProcess() throws IOException {
 		String message = "Hello bob. I am testing our cipher system!";
 		
 		ConfigurableApplicationContext context = SpringApplication.run(RsaProjApplication.class);
