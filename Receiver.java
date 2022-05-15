@@ -1,6 +1,8 @@
 package com.jeremy.RSAProj;
 
 import java.math.BigInteger;
+
+import java.io.*;
 import java.util.List;
 import java.util.Random;
 
@@ -57,11 +59,7 @@ public class Receiver {
 		}
 		
 		cipher.setExponent(publicKey.modInverse(calculatePhi()));
-		System.out.println("Private key: " + this.cipher.getExponent());
-		System.out.println("Public key: " + publicKey.mod(calculatePhi()));
-		System.out.println("Phi: " + calculatePhi());
 		cipher.setModulus(prime1.multiply(prime2));
-		System.out.println("Modulus: " + prime1.multiply(prime2));
 		
 		return publicKey.mod(calculatePhi());
 	}
@@ -71,17 +69,27 @@ public class Receiver {
 		png.setHi(new BigInteger("20000"));
 		
 		prime1 = png.getRandomPrime();
-		System.out.println("Prime1: " + prime1);
 		prime2 = png.getRandomPrime();
-		System.out.println("Prime2: " + prime2);
 	}
 	
-	public String receiveMessage(List<BigInteger> encryptedMessage) {
-		List<BigInteger> decryptedMessage = cipher.executeCipher(encryptedMessage);
-		System.out.println("Recovered plaintext: " + decryptedMessage);
-		String originalMessage = parser.numericListToString(decryptedMessage);
-		System.out.println("Recipient received: " + originalMessage);
-		return originalMessage;
+	public String receiveMessage(List<BigInteger> encryptedMessage) throws IOException {
+		
+		FileWriter ciphertextWriter = null;
+		
+		try {
+			ciphertextWriter = new FileWriter("ciphertext.txt");
+			
+			String cipherText = parser.numericListToString(encryptedMessage);
+			
+			ciphertextWriter.write(cipherText);
+			
+			List<BigInteger> decryptedMessage = cipher.executeCipher(encryptedMessage);
+			String originalMessage = parser.numericListToString(decryptedMessage);
+			return originalMessage;
+			
+		} finally {
+			ciphertextWriter.close();
+		}
 	}
 	
 }
