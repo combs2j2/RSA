@@ -1,5 +1,6 @@
 package com.jeremy.RSAProj;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class Sender {
 		this.parser = parser;
 	}
 	
-	public String sendMessage(Receiver bob) {
+	public String sendMessage(Receiver bob) throws IOException {
 		
 		bob.setPrimes();
 		cipher.setExponent(bob.generatePublicKey());
@@ -44,10 +45,8 @@ public class Sender {
 		parser.setModulus(bob.getCipher().getModulus());
 		
 		List<BigInteger> plainText = parser.stringToNumericList(message);
-		System.out.println("Plaintext: " + plainText);
 		
 		List<BigInteger> cipherText = cipher.executeCipher(plainText);
-		System.out.println("Ciphertext: " + cipherText);
 		
 		return bob.receiveMessage(cipherText);
 	}
